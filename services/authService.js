@@ -1,22 +1,18 @@
 import bcrypt from "bcrypt";
-import { StatusCodes } from "http-status-codes";
-import _ from "lodash";
-import sequelize from "../config/database.js";
-import ERROR_CODES from "../constants/errorCodes.js";
 import Client from "../models/Client.js";
-import RefreshToken from "../models/RefreshToken.js";
-import Users from "../models/User.js";
+import { RefreshToken, sequelize, Users } from "../models/index.js";
 import { isValidPassword } from "../utils/auth.js";
 import ResponseWrapper from "../utils/response.js";
 import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/tokenUtils.js";
+
 /**
  * @param {string} username
  * @param {string} password
  * @param {string} role
- * @returns {Promise<ResponseWrapper>}
+ * @returns {Promise<{accessToken: string, refreshToken: string}>}
  */
 async function registerService(username, password, role) {
   const t = await sequelize.transaction();
@@ -56,17 +52,9 @@ async function registerService(username, password, role) {
 
     await t.commit();
 
-    return ResponseWrapper.success(
-      StatusCodes.CREATED,
-      "User created successfully",
-      {
-        accessToken: access_token,
-        refreshToken: refresh_token,
-        user: _.pick(user, ["id", "username", "role"]),
-      }
-    );
+    return { accessToken: access_token, refreshToken: refresh_token };
   } catch (error) {
-    await t.rollback();
+    if (t) await t.rollback();
     throw error;
   }
 }
@@ -109,24 +97,13 @@ async function loginService(username, password) {
 
     await t.commit();
 
-    return ResponseWrapper.success(StatusCodes.OK, "Login successful", {
+    return {
       accessToken: access_token,
       refreshToken: refresh_token,
-      user: _.pick(user, ["id", "username", "role"]),
-    });
+    };
   } catch (error) {
     await t.rollback();
-    switch (error.message) {
-      case "USER_NOT_FOUND":
-        return { success: false, error_codes: ERROR_CODES.USER_NOT_FOUND };
-      case "UNAUTHORIZED":
-        return { success: false, error_codes: ERROR_CODES.UNAUTHORIZED };
-      default:
-        return {
-          success: false,
-          error_codes: ERROR_CODES.INTERNAL_SERVER_ERROR,
-        };
-    }
+    throw error;
   }
 }
 
