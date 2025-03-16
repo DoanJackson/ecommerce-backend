@@ -14,8 +14,7 @@ async function register(req, res) {
 
     return res.status(StatusCodes.CREATED).json({ ...result });
   } catch (error) {
-    console.error(error);
-    return sendErrorResponse(res, ERROR_CODES.INTERNAL_SERVER_ERROR);
+    return sendErrorResponse(res, ERROR_CODES.USER_EXISTS);
   }
 }
 
@@ -28,11 +27,12 @@ async function login(req, res) {
   try {
     const { username, password } = req.body;
     const result = await loginService(username, password);
+    if (!result.success) return sendErrorResponse(res, result.error_codes);
     // Send the response
     res.status(StatusCodes.OK).json({ ...result });
   } catch (error) {
-    console.error(error);
     return sendErrorResponse(res, ERROR_CODES.INTERNAL_SERVER_ERROR);
   }
 }
+
 export { login, register };

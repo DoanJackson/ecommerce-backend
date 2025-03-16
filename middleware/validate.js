@@ -1,5 +1,6 @@
 import Joi from "joi";
 import ERROR_CODES from "../constants/errorCodes.js";
+import ResponseWrapper from "../utils/response.js";
 
 /**
  *
@@ -16,10 +17,9 @@ function validate(schema) {
     const { error } = schema.validate(req.body, { abortEarly: false });
 
     if (error) {
-      return res.status(ERROR_CODES.INVALID_INPUT.status).json({
-        message: ERROR_CODES.INVALID_INPUT.message,
-        details: error.details.map((error) => error.message),
-      });
+      return res
+        .status(ERROR_CODES.INVALID_INPUT.status)
+        .json(ResponseWrapper.error(ERROR_CODES.INVALID_INPUT));
     }
 
     next();

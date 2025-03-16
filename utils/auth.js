@@ -6,13 +6,8 @@ import bcrypt from "bcrypt";
  * @param {String} hashedPassword
  * @returns {Boolean}
  */
-function isValidPassword(password, hashedPassword) {
-  return bcrypt.compare(password, hashedPassword, (err, result) => {
-    if (err) {
-      return false;
-    }
-    return result;
-  });
+async function isValidPassword(password, hashedPassword) {
+  return await bcrypt.compare(password, hashedPassword);
 }
 
 export { isValidPassword };
