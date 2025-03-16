@@ -1,4 +1,4 @@
-import ResponseWrapper from "./response";
+import ResponseWrapper from "./response.js";
 
 /**
  * @param {import('express').Response} res

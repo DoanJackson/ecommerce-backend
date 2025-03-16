@@ -1,5 +1,5 @@
 import Joi from "joi";
-import ERROR_CODES from "../constants/errorCodes";
+import ERROR_CODES from "../constants/errorCodes.js";
 
 /**
  *
