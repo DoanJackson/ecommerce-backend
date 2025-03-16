@@ -6,12 +6,17 @@ import ERROR_CODES from "../constants/errorCodes.js";
 import Client from "../models/Client.js";
 import RefreshToken from "../models/RefreshToken.js";
 import Users from "../models/User.js";
+import { sendErrorResponse } from "../utils/errorHandlers.js";
 import ResponseWrapper from "../utils/response.js";
 import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/tokenUtils.js";
 
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
 async function register(req, res) {
   const t = await sequelize.transaction();
 
@@ -37,9 +42,8 @@ async function register(req, res) {
       { transaction: t }
     );
 
-    // Generate access token
+    // Generate access token and refresh token
     const access_token = generateAccessToken(user);
-    // Generate refresh token
     const refresh_token = generateRefreshToken(user);
 
     // save refresh token in the database
@@ -66,9 +70,56 @@ async function register(req, res) {
   } catch (error) {
     // Rollback the transaction
     await t.rollback();
-    // Send the error response
-    const error_code = ERROR_CODES.USER_EXISTS;
-    res.status(error_code.status).json(ResponseWrapper.error(error_code));
+    console.error(error);
+    return sendErrorResponse(res, ERROR_CODES.INTERNAL_SERVER_ERROR);
   }
 }
-export { register };
+
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+async function login(req, res) {
+  try {
+    const { username, password } = req.body;
+
+    // Find the user
+    const user = await Users.findOne({
+      where: {
+        username: username,
+      },
+    });
+
+    // If user not found
+    if (!user) return sendErrorResponse(res, ERROR_CODES.USER_NOT_FOUND);
+
+    // If password is invalid
+    const isValid = bcrypt.compare(password, user.password);
+    if (!isValid) return sendErrorResponse(res, ERROR_CODES.UNAUTHORIZED);
+
+    // Generate access token and refresh token
+    const access_token = generateAccessToken(user);
+    const refresh_token = generateRefreshToken(user);
+
+    // Save refresh token in the database
+    await RefreshToken.create({
+      user_id: user.id,
+      token: refresh_token,
+      expired_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    });
+
+    // Send the response
+    res.status(StatusCodes.OK).json(
+      ResponseWrapper.success(StatusCodes.OK, "Login successful", {
+        accessToken: access_token,
+        refreshToken: refresh_token,
+        user: _.pick(user, ["id", "username", "role"]),
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    return sendErrorResponse(res, ERROR_CODES.INTERNAL_SERVER_ERROR);
+  }
+}
+export { login, register };

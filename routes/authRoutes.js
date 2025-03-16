@@ -1,9 +1,15 @@
 import { Router } from "express";
-import { register } from "../controllers/authController.js";
-import { validateRegisterUser } from "../validations/userValidation.js";
+import { login, register } from "../controllers/authController.js";
+import validate from "../middleware/validate.js";
+import {
+  loginUserSchema,
+  registerUserSchema,
+} from "../validations/userValidation.js";
 
 const router = Router();
 
-router.post("/register", validateRegisterUser, register);
+router.post("/register", validate(registerUserSchema), register);
+router.post("/login", validate(loginUserSchema), login);
+// router.post("auth/google", googleLogin);
 
 export default router;

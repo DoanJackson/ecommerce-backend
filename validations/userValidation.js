@@ -1,5 +1,4 @@
 import Joi from "joi";
-import ERROR_CODES from "../constants/errorCodes.js";
 
 const registerUserSchema = Joi.object({
   username: Joi.string().min(1).max(100).required(),
@@ -7,19 +6,9 @@ const registerUserSchema = Joi.object({
   role: Joi.string().valid("user", "admin").default("user"),
 });
 
-function validateRegisterUser(req, res, next) {
-  const { error } = registerUserSchema.validate(req.body, {
-    abortEarly: false,
-  });
+const loginUserSchema = Joi.object({
+  username: Joi.string().min(1).max(100).required(),
+  password: Joi.string().min(1).max(100).required(),
+});
 
-  if (error) {
-    return res.status(ERROR_CODES.INVALID_INPUT.status).json({
-      message: ERROR_CODES.INVALID_INPUT.message,
-      details: error.details.map((error) => error.message),
-    });
-  }
-
-  next();
-}
-
-export { validateRegisterUser };
+export { loginUserSchema, registerUserSchema };

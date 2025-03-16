@@ -7,6 +7,9 @@ const ERROR_CODES = {
     status: StatusCodes.INTERNAL_SERVER_ERROR,
     message: "INTERNAL_SERVER_ERROR",
   },
+  USER_NOT_FOUND: { status: StatusCodes.NOT_FOUND, message: "USER_NOT_FOUND" },
+  UNAUTHORIZED: { status: StatusCodes.UNAUTHORIZED, message: "UNAUTHORIZED" },
+  FORBIDDEN: { status: StatusCodes.FORBIDDEN, message: "FORBIDDEN" },
 };
 
 export default ERROR_CODES;
