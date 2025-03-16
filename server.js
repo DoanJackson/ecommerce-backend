@@ -1,5 +1,5 @@
-import express from "express";
 import bodyParser from "body-parser";
+import express from "express";
 import { getEnv } from "./config/env.js";
 import authRoutes from "./routes/authRoutes.js";
 

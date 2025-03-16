@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
+import Users from "./User.js";
 
 const Client = sequelize.define(
   "client",
@@ -8,7 +9,7 @@ const Client = sequelize.define(
       type: DataTypes.UUID,
       primaryKey: true,
       references: {
-        model: "users",
+        model: Users,
         key: "id",
       },
       onDelete: "CASCADE",

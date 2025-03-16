@@ -1,21 +1,26 @@
 import { StatusCodes } from "http-status-codes";
-import ERROR_CODES from "../constants/errorCodes.js";
 
-function successResponse(data, message = "Success", status = StatusCodes.OK) {
-  return {
-    success: true,
-    status,
-    message,
-    data,
-  };
+class ResponseWrapper {
+  constructor(success, status, message, data = null) {
+    this.success = success;
+    this.status = status;
+
+    Object.assign(this, this.cleanObject({ message, data }));
+  }
+
+  static success(status = StatusCodes.OK, message = "Success", data = null) {
+    return new ResponseWrapper(true, status, message, data);
+  }
+
+  static error(errorCode) {
+    return new ResponseWrapper(false, errorCode.status, errorCode.message);
+  }
+
+  cleanObject(obj) {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v != null && v !== undefined)
+    );
+  }
 }
 
-function errorResponse(error = ERROR_CODES.INTERNAL_SERVER_ERROR) {
-  return {
-    success: false,
-    status: error.status,
-    message: error.message,
-  };
-}
-
-export { successResponse, errorResponse };
+export default ResponseWrapper;
