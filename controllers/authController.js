@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import ERROR_CODES from "../constants/errorCodes.js";
 import {
   loginService,
+  logoutService,
   refreshTokenService,
   registerService,
 } from "../services/authService.js";
@@ -94,4 +95,23 @@ async function refreshToken(req, res) {
   }
 }
 
-export { login, refreshToken, register };
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+async function logout(req, res) {
+  try {
+    const refresh_token = req.cookies.refresh_token;
+    if (!refresh_token)
+      return res.status(StatusCodes.OK).json(ResponseWrapper.success());
+    await logoutService(refresh_token);
+    res.clearCookie("refresh_token");
+    res.status(StatusCodes.OK).json(ResponseWrapper.success());
+  } catch (error) {
+    console.error(error);
+    return sendErrorResponse(res, ERROR_CODES.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export { login, logout, refreshToken, register };

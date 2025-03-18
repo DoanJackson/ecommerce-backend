@@ -136,4 +136,15 @@ async function refreshTokenService(refreshToken) {
   }
 }
 
-export { loginService, refreshTokenService, registerService };
+/**
+ * @param {string} refreshToken
+ */
+async function logoutService(refreshToken) {
+  try {
+    await RefreshToken.destroy({ where: { token: refreshToken } });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export { loginService, logoutService, refreshTokenService, registerService };

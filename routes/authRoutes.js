@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   login,
+  logout,
   refreshToken,
   register,
 } from "../controllers/authController.js";
@@ -18,6 +19,7 @@ const router = Router();
 
 router.post("/register", validate(registerUserSchema), register);
 router.post("/login", validate(loginUserSchema), login);
+router.delete("/logout", logout);
 router.post("/refresh-token", refreshToken);
 // Google OAuth
 router.get("/google", googleAuth);
