@@ -1,5 +1,5 @@
 import RefreshToken from "./RefreshToken.js";
-import Users from "./User.js";
+import Users from "./Users.js";
 
 function setupAssociations() {
   Users.hasMany(RefreshToken, { foreignKey: "user_id", as: "refreshTokens" });

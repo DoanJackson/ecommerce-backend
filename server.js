@@ -5,6 +5,7 @@ import express from "express";
 import session from "express-session";
 import { getEnv } from "./config/env.js";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 const port = getEnv("PORT");
@@ -29,6 +30,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

@@ -14,6 +14,10 @@ const ERROR_CODES = {
     status: StatusCodes.BAD_REQUEST,
     message: "INVALID_REFRESH_TOKEN",
   },
+  INVALID_OR_EXPIRED_TOKEN: {
+    status: StatusCodes.BAD_REQUEST,
+    message: "INVALID_OR_EXPIRED_TOKEN",
+  },
 };
 
 export default ERROR_CODES;

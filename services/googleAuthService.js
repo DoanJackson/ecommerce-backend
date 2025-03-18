@@ -1,6 +1,5 @@
 import { OAuth2Client } from "google-auth-library";
 import { getEnv } from "../config/env.js";
-import Client from "../models/Client.js";
 import { RefreshToken, sequelize, Users } from "../models/index.js";
 import {
   generateAccessToken,
@@ -56,15 +55,8 @@ async function handleGoogleCallback(oAuth2Client, code) {
       userRecord = await Users.create(
         {
           google_id: user.google_id,
-        },
-        { transaction: t }
-      );
-
-      await Client.create(
-        {
-          id: userRecord.id,
-          name: user.name,
           email: user.email,
+          name: user.name,
         },
         { transaction: t }
       );

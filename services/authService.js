@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import { getEnv } from "../config/env.js";
 import ERROR_CODES from "../constants/errorCodes.js";
-import Client from "../models/Client.js";
 import { RefreshToken, sequelize, Users } from "../models/index.js";
 import { isValidPassword } from "../utils/auth.js";
 import ResponseWrapper from "../utils/response.js";
@@ -27,14 +26,6 @@ async function registerService(username, password, role) {
         username,
         password: hashedPassword,
         role,
-      },
-      { transaction: t }
-    );
-
-    // Create a client
-    await Client.create(
-      {
-        id: user.id,
       },
       { transaction: t }
     );
