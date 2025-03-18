@@ -1,6 +1,5 @@
 import { getEnv } from "../config/env.js";
 import ERROR_CODES from "../constants/errorCodes.js";
-import { Users } from "../models/index.js";
 import { sendErrorResponse } from "../utils/errorHandlers.js";
 import { verifyToken } from "../utils/tokenUtils.js";
 
@@ -19,16 +18,8 @@ async function authenticateUser(req, res, next) {
   const token = authHeader.split(" ")[1];
   try {
     const decoded = verifyToken(token, getEnv("JWT_SECRET"));
-    const user = await Users.findOne({
-      where: {
-        id: decoded.id,
-      },
-    });
-    if (!user) {
-      return sendErrorResponse(res, ERROR_CODES.USER_NOT_FOUND);
-    }
 
-    req.user = user;
+    req.user = { id: decoded.id, roles: decoded.roles };
     next();
   } catch (error) {
     return sendErrorResponse(res, ERROR_CODES.INVALID_OR_EXPIRED_TOKEN);

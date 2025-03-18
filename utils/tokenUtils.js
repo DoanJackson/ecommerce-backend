@@ -11,7 +11,7 @@ const REFRESH_TOKEN_EXPIRES_IN = getEnv("REFRESH_TOKEN_EXPIRES_IN");
  * @returns {string}
  */
 function generateAccessToken(user) {
-  return jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
+  return jwt.sign({ id: user.id, roles: user.roles }, JWT_SECRET, {
     expiresIn: ACCESS_TOKEN_EXPIRES_IN,
     algorithm: "HS256",
   });
