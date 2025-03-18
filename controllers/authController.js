@@ -1,6 +1,10 @@
 import { StatusCodes } from "http-status-codes";
 import ERROR_CODES from "../constants/errorCodes.js";
-import { loginService, registerService } from "../services/authService.js";
+import {
+  loginService,
+  refreshTokenService,
+  registerService,
+} from "../services/authService.js";
 import { sendErrorResponse } from "../utils/errorHandlers.js";
 import ResponseWrapper from "../utils/response.js";
 
@@ -66,4 +70,28 @@ async function login(req, res) {
   }
 }
 
-export { login, register };
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+async function refreshToken(req, res) {
+  try {
+    const refresh_token = req.cookies.refresh_token;
+    if (!refresh_token) {
+      return sendErrorResponse(res, ERROR_CODES.INVALID_REFRESH_TOKEN);
+    }
+    const result = await refreshTokenService(refresh_token);
+    if (!result.success) {
+      return sendErrorResponse(res, result.error_code);
+    }
+    res
+      .status(StatusCodes.OK)
+      .json(ResponseWrapper.success({ accessToken: result.accessToken }));
+  } catch (error) {
+    // console.error(error);
+    return sendErrorResponse(res, ERROR_CODES.INVALID_REFRESH_TOKEN);
+  }
+}
+
+export { login, refreshToken, register };

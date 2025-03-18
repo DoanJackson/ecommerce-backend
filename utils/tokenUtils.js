@@ -28,4 +28,13 @@ function generateRefreshToken(user) {
   });
 }
 
-export { generateAccessToken, generateRefreshToken };
+/**
+ * @param {string} token
+ * @param {string} secret
+ * @returns {import("jsonwebtoken").JwtPayload}
+ */
+function verifyToken(token, secret) {
+  return jwt.verify(token, secret);
+}
+
+export { generateAccessToken, generateRefreshToken, verifyToken };

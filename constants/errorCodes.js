@@ -10,6 +10,10 @@ const ERROR_CODES = {
   USER_NOT_FOUND: { status: StatusCodes.NOT_FOUND, message: "USER_NOT_FOUND" },
   UNAUTHORIZED: { status: StatusCodes.UNAUTHORIZED, message: "UNAUTHORIZED" },
   FORBIDDEN: { status: StatusCodes.FORBIDDEN, message: "FORBIDDEN" },
+  INVALID_REFRESH_TOKEN: {
+    status: StatusCodes.BAD_REQUEST,
+    message: "INVALID_REFRESH_TOKEN",
+  },
 };
 
 export default ERROR_CODES;

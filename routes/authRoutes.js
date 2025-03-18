@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { login, register } from "../controllers/authController.js";
+import {
+  login,
+  refreshToken,
+  register,
+} from "../controllers/authController.js";
 import {
   googleAuth,
   googleAuthCallback,
@@ -14,6 +18,7 @@ const router = Router();
 
 router.post("/register", validate(registerUserSchema), register);
 router.post("/login", validate(loginUserSchema), login);
+router.post("/refresh-token", refreshToken);
 // Google OAuth
 router.get("/google", googleAuth);
 router.get("/google/callback", googleAuthCallback);

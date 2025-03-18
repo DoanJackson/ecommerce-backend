@@ -1,4 +1,6 @@
 import bcrypt from "bcrypt";
+import { getEnv } from "../config/env.js";
+import ERROR_CODES from "../constants/errorCodes.js";
 import Client from "../models/Client.js";
 import { RefreshToken, sequelize, Users } from "../models/index.js";
 import { isValidPassword } from "../utils/auth.js";
@@ -6,6 +8,7 @@ import ResponseWrapper from "../utils/response.js";
 import {
   generateAccessToken,
   generateRefreshToken,
+  verifyToken,
 } from "../utils/tokenUtils.js";
 
 /**
@@ -107,4 +110,30 @@ async function loginService(username, password) {
   }
 }
 
-export { loginService, registerService };
+/**
+ * @param {string} refreshToken
+ * @returns {Promise<{success: boolean, accessToken?: string, message?: string}>}
+ */
+async function refreshTokenService(refreshToken) {
+  try {
+    const decoded = verifyToken(refreshToken, getEnv("JWT_REFRESH_SECRET"));
+
+    const storedToken = await RefreshToken.findOne({
+      where: { user_id: decoded.id, token: refreshToken },
+    });
+    if (!storedToken || storedToken.expired_at < new Date()) {
+      return { success: false, error_code: ERROR_CODES.INVALID_REFRESH_TOKEN };
+    }
+
+    const user = await Users.findByPk(decoded.id);
+    const newAccessToken = generateAccessToken({
+      id: user.id,
+      role: user.role,
+    });
+    return { success: true, accessToken: newAccessToken };
+  } catch (err) {
+    return { success: false, error_code: ERROR_CODES.INVALID_REFRESH_TOKEN };
+  }
+}
+
+export { loginService, refreshTokenService, registerService };
