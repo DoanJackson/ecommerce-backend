@@ -5,6 +5,7 @@ import express from "express";
 import session from "express-session";
 import { getEnv } from "./config/env.js";
 import authRoutes from "./routes/authRoutes.js";
+import merchantGoodsRoutes from "./routes/merchantGoodsRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
@@ -31,6 +32,7 @@ app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/merchant/goods", merchantGoodsRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
