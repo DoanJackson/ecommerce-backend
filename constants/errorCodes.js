@@ -18,6 +18,10 @@ const ERROR_CODES = {
     status: StatusCodes.BAD_REQUEST,
     message: "INVALID_OR_EXPIRED_TOKEN",
   },
+  GOODS_NOT_FOUND: {
+    status: StatusCodes.NOT_FOUND,
+    message: "GOODS_NOT_FOUND",
+  },
 };
 
 export default ERROR_CODES;

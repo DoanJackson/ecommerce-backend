@@ -25,5 +25,4 @@ function validate(schema) {
     next();
   };
 }
-
 export default validate;
