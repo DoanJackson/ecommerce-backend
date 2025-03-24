@@ -103,7 +103,7 @@ async function loginService(username, password) {
 
 /**
  * @param {string} refreshToken
- * @returns {Promise<{success: boolean, accessToken?: string, message?: string}>}
+ * @returns {Promise<{success: boolean, accessToken?: string, error_code?: string}>}
  */
 async function refreshTokenService(refreshToken) {
   try {
