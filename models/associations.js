@@ -8,7 +8,7 @@ function setupAssociations() {
   Users.hasMany(RefreshToken, { foreignKey: "user_id", as: "refreshTokens" });
   RefreshToken.belongsTo(Users, { foreignKey: "user_id", as: "user" });
   Users.hasMany(Goods, { foreignKey: "user_id", as: "goods" });
-  Goods.belongsTo(Users, { foreignKey: "user_id", as: "user" });
+  Goods.belongsTo(Users, { foreignKey: "user_id", as: "merchant" });
   Goods.belongsToMany(Types, {
     through: Goods_Types,
     foreignKey: "goods_id",

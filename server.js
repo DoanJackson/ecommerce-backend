@@ -5,6 +5,7 @@ import express from "express";
 import session from "express-session";
 import { getEnv } from "./config/env.js";
 import authRoutes from "./routes/authRoutes.js";
+import goodsRoutes from "./routes/goodsRoutes.js";
 import merchantGoodsRoutes from "./routes/merchantGoodsRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
@@ -30,6 +31,7 @@ app.use(
 app.use(cookieParser());
 
 // Routes
+app.use("/api/goods", goodsRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/merchant/goods", merchantGoodsRoutes);
