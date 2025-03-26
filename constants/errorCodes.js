@@ -22,6 +22,20 @@ const ERROR_CODES = {
     status: StatusCodes.NOT_FOUND,
     message: "GOODS_NOT_FOUND",
   },
+  EXTERNAL_SERVICE_ERROR: {
+    status: StatusCodes.BAD_GATEWAY,
+    message: "EXTERNAL_SERVICE_ERROR",
+  },
+  // error when save image data in database
+  SAVE_IMAGE_ERROR: {
+    status: StatusCodes.INTERNAL_SERVER_ERROR,
+    message: "SAVE_IMAGE_ERROR",
+  },
+  // error when delete image data in database
+  DELETE_IMAGE_ERROR: {
+    status: StatusCodes.INTERNAL_SERVER_ERROR,
+    message: "DELETE_IMAGE_ERROR",
+  },
 };
 
 export default ERROR_CODES;

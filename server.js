@@ -37,6 +37,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/merchant/goods", merchantGoodsRoutes);
 
 app.get("/", (req, res) => {
+  // res.json({ message: "Hello World!" });
   res.send("Hello World!");
 });
 

@@ -14,4 +14,23 @@ const goodsUpdateSchema = Joi.object({
   description: Joi.string().allow(null, ""),
 });
 
-export { goodsSchema, goodsUpdateSchema };
+const goodsPresignedUrlSchema = Joi.object({
+  id_product: Joi.string().guid({ version: "uuidv4" }).required(),
+  file_count: Joi.number().min(1).required(),
+});
+
+const goodsSaveImageSchema = Joi.object({
+  images: Joi.array().items(
+    Joi.object({
+      public_id: Joi.string().required(),
+      secure_url: Joi.string().required(),
+    })
+  ),
+});
+
+export {
+  goodsPresignedUrlSchema,
+  goodsSaveImageSchema,
+  goodsSchema,
+  goodsUpdateSchema,
+};

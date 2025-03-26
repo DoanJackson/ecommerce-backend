@@ -5,13 +5,17 @@ import {
   deleteGoods,
   getGoods,
   getGoodsDetail,
+  getPresignedUrl,
+  saveImage,
   updateGoods,
 } from "../controllers/merchantGoodsController.js";
 import { authenticateUser } from "../middleware/authMiddleware.js";
-import { hasRole } from "../middleware/roleMiddleware.js";
+import { hasAnyRole, hasRole } from "../middleware/roleMiddleware.js";
 import validate from "../middleware/validate.js";
 import { validateUUID } from "../middleware/validateUUID.js";
 import {
+  goodsPresignedUrlSchema,
+  goodsSaveImageSchema,
   goodsSchema,
   goodsUpdateSchema,
 } from "../validations/goodsValidation.js";
@@ -52,5 +56,24 @@ router.delete(
   validateUUID(["id"]),
   deleteGoods
 );
+
+router.post(
+  "/upload/presigned-url",
+  authenticateUser,
+  hasAnyRole([ROLES.CLIENT, ROLES.MERCHANT]),
+  validate(goodsPresignedUrlSchema),
+  getPresignedUrl
+);
+
+router.post(
+  "/:goods_id/images",
+  authenticateUser,
+  hasRole(ROLES.MERCHANT),
+  validateUUID(["goods_id"]),
+  validate(goodsSaveImageSchema),
+  saveImage
+);
+
+router.post("");
 
 export default router;

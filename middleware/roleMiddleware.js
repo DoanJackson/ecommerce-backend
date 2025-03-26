@@ -41,4 +41,24 @@ function notHasRole(roleName) {
   };
 }
 
-export { hasRole, notHasRole };
+/**
+ * @param {Array<String>} listRoles
+ * @returns {Function}
+ */
+function hasAnyRole(listRoles) {
+  /**
+   * @param {import('express').Request}
+   * @param {import('express').Response}
+   * @param {import('express').Next Function}
+   * @returns {void}
+   */
+  return (req, res, next) => {
+    const { roles } = req.user;
+    if (!roles.some((role) => listRoles.includes(role))) {
+      return sendErrorResponse(res, ERROR_CODES.FORBIDDEN);
+    }
+    next();
+  };
+}
+
+export { hasAnyRole, hasRole, notHasRole };

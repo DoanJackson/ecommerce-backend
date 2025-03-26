@@ -15,7 +15,6 @@ function validate(schema) {
    */
   return function (req, res, next) {
     const { error } = schema.validate(req.body, { abortEarly: false });
-
     if (error) {
       return res
         .status(ERROR_CODES.INVALID_INPUT.status)

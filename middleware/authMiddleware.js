@@ -18,7 +18,6 @@ async function authenticateUser(req, res, next) {
   const token = authHeader.split(" ")[1];
   try {
     const decoded = verifyToken(token, getEnv("JWT_SECRET"));
-
     req.user = { id: decoded.id, roles: decoded.roles };
     next();
   } catch (error) {
