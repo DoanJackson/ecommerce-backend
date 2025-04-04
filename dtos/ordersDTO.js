@@ -1,12 +1,12 @@
 class OrdersDTO {
   constructor({ id, quantity, total_price, status, created_at, goods }) {
-    this.id_order = id;
+    this.order_id = id;
     this.quantity = quantity;
     this.total_price = total_price;
     this.status = status;
     this.created_at = created_at;
     this.goods = {
-      id_goods: goods.id,
+      goods_id: goods.id,
       name: goods.name,
     };
     this.merchant = {

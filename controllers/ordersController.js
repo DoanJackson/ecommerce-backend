@@ -21,8 +21,8 @@ async function createOrders(req, res) {
     const user_id = req.user.id;
     const { goods_id, quantity, city, district, address } = req.body;
 
-    // check if the goods exists and quantity is enough
-    const goods = await checkOrdersInputValid(goods_id, quantity);
+    // check if the goods exists, quantity is enough and user is not the owner of the goods
+    const goods = await checkOrdersInputValid(goods_id, quantity, user_id);
     if (!goods.success) {
       return sendErrorResponse(res, goods.error_codes);
     }

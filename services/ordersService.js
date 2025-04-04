@@ -9,12 +9,20 @@ import { checkGoodsExists } from "./goodsService.js";
  * @param {number} quantity
  * @returns {Promise<{success: boolean, data: any, error?: string}>}
  */
-async function checkOrdersInputValid(goods_id, quantity) {
+async function checkOrdersInputValid(goods_id, quantity, user_id) {
   try {
     const goods = await checkGoodsExists(goods_id);
     if (!goods.success) {
       return { success: false, error_codes: goods.error_codes };
     }
+    // check if user is merchant and goods is not his
+    if (goods.data.user_id === user_id) {
+      return {
+        success: false,
+        error_codes: ERROR_CODES.MERCHANT_BUY_OWN_PRODUCT,
+      };
+    }
+
     // check if the quantity is enough (< quantity of goods)
     if (quantity > goods.data.quantity) {
       return { success: false, error_codes: ERROR_CODES.QUANTITY_NOT_ENOUGH };

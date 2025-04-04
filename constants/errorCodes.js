@@ -48,6 +48,10 @@ const ERROR_CODES = {
     status: StatusCodes.INTERNAL_SERVER_ERROR,
     message: "CANNOT_CREATE_ORDER",
   },
+  MERCHANT_BUY_OWN_PRODUCT: {
+    status: StatusCodes.FORBIDDEN,
+    message: "MERCHANT_BUY_OWN_PRODUCT",
+  },
   ORDER_NOT_FOUND: {
     status: StatusCodes.NOT_FOUND,
     message: "ORDER_NOT_FOUND",
@@ -55,6 +59,10 @@ const ERROR_CODES = {
   RETRIEVE_ORDER_FAILED: {
     status: StatusCodes.INTERNAL_SERVER_ERROR,
     message: "RETRIEVE_ORDER_FAILED",
+  },
+  RETRIEVE_MERCHANT_ORDERS_FAILED: {
+    status: StatusCodes.INTERNAL_SERVER_ERROR,
+    message: "RETRIEVE_MERCHANT_ORDERS_FAILED",
   },
 };
 
