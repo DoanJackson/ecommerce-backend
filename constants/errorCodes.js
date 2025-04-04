@@ -48,6 +48,10 @@ const ERROR_CODES = {
     status: StatusCodes.INTERNAL_SERVER_ERROR,
     message: "CANNOT_CREATE_ORDER",
   },
+  ORDER_NOT_FOUND: {
+    status: StatusCodes.NOT_FOUND,
+    message: "ORDER_NOT_FOUND",
+  },
 };
 
 export default ERROR_CODES;

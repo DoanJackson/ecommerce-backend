@@ -1,8 +1,10 @@
 import { StatusCodes } from "http-status-codes";
 import ERROR_CODES from "../constants/errorCodes.js";
 import {
+  checkOrdersExists,
   checkOrdersInputValid,
   createOrdersService,
+  deleteOrdersService,
 } from "../services/ordersService.js";
 import { sendErrorResponse } from "../utils/errorHandlers.js";
 import ResponseWrapper from "../utils/response.js";
@@ -48,4 +50,35 @@ async function createOrders(req, res) {
   }
 }
 
-export { createOrders };
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+async function deleteOrders(req, res) {
+  try {
+    // check if the orders exists
+    const orders_id = req.params.id;
+    const user_id = req.user.id;
+    const orders = await checkOrdersExists(orders_id);
+    if (!orders.success) {
+      return sendErrorResponse(res, orders.error_codes);
+    }
+    // check if the user is the owner of the orders
+    if (orders.data.user_id !== user_id) {
+      return sendErrorResponse(res, ERROR_CODES.FORBIDDEN);
+    }
+    // delete the orders
+    const result = await deleteOrdersService(orders_id, user_id);
+    if (!result.success) {
+      return sendErrorResponse(res, result.error_codes);
+    }
+    return res
+      .status(StatusCodes.OK)
+      .json(ResponseWrapper.success(StatusCodes.OK, "Orders delted", null));
+  } catch (error) {
+    console.error("Error deleting orders", error);
+    return sendErrorResponse(res, ERROR_CODES.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export { createOrders, deleteOrders };

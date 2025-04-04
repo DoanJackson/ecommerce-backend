@@ -1,9 +1,10 @@
 import { Router } from "express";
 import ROLES from "../constants/role.js";
-import { createOrders } from "../controllers/ordersController.js";
+import { createOrders, deleteOrders } from "../controllers/ordersController.js";
 import { authenticateUser } from "../middleware/authMiddleware.js";
 import { hasRole } from "../middleware/roleMiddleware.js";
 import validate from "../middleware/validate.js";
+import { validateUUID } from "../middleware/validateUUID.js";
 import { createOrdersSchema } from "../validations/ordersValidation.js";
 
 const router = Router();
@@ -14,6 +15,13 @@ router.post(
   hasRole(ROLES.CLIENT),
   validate(createOrdersSchema),
   createOrders
+);
+router.delete(
+  "/:id",
+  authenticateUser,
+  hasRole(ROLES.CLIENT),
+  validateUUID(["id"]),
+  deleteOrders
 );
 
 export default router;

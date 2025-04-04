@@ -60,4 +60,55 @@ async function createOrdersService(input) {
     return { success: false, error_codes: ERROR_CODES.CANNOT_CREATE_ORDER };
   }
 }
-export { checkOrdersInputValid, createOrdersService };
+
+/**
+ * @param {string} orders_id
+ * @returns {Promise<{success: boolean, data?: any, error_codes?: string}>}
+ */
+async function checkOrdersExists(orders_id) {
+  try {
+    const orders = await Orders.findOne({
+      where: {
+        id: orders_id,
+      },
+    });
+    if (!orders) {
+      return { success: false, error_codes: ERROR_CODES.ORDER_NOT_FOUND };
+    }
+    return { success: true, data: orders };
+  } catch (error) {
+    console.error("Error checking orders", error);
+    return { success: false, error_codes: ERROR_CODES.INTERNAL_SERVER_ERROR };
+  }
+}
+
+/**
+ * @param {string} orders_id
+ * @param {string} user_id
+ * @returns {Promise<{success: boolean, error_codes?: string}>}
+ */
+async function deleteOrdersService(orders_id, user_id) {
+  const t = await sequelize.transaction();
+  try {
+    await Orders.destroy({
+      where: {
+        id: orders_id,
+        user_id: user_id,
+      },
+      transaction: t,
+    });
+    await t.commit();
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting orders", error);
+    await t.rollback();
+    return { success: false, error_codes: ERROR_CODES.ORDER_NOT_FOUND };
+  }
+}
+
+export {
+  checkOrdersExists,
+  checkOrdersInputValid,
+  createOrdersService,
+  deleteOrdersService,
+};
