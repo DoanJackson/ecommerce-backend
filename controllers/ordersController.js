@@ -5,9 +5,11 @@ import {
   checkOrdersInputValid,
   createOrdersService,
   deleteOrdersService,
+  getOrdersService,
 } from "../services/ordersService.js";
 import { sendErrorResponse } from "../utils/errorHandlers.js";
 import ResponseWrapper from "../utils/response.js";
+import { getSortType } from "../utils/sortUitls.js";
 
 /**
  * @param {import('express').Request} req
@@ -81,4 +83,33 @@ async function deleteOrders(req, res) {
   }
 }
 
-export { createOrders, deleteOrders };
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
+async function getOrders(req, res) {
+  try {
+    const { page = 1, limit = 10, search = "", sort = "" } = req.query;
+    const sortType = getSortType(["created_at"], sort);
+
+    const result = await getOrdersService({
+      page,
+      limit,
+      search,
+      sortType,
+      user_id: req.user.id,
+    });
+    if (!result.success) {
+      return sendErrorResponse(res, result.error_codes);
+    }
+    return res
+      .status(StatusCodes.OK)
+      .json(ResponseWrapper.success(StatusCodes.OK, "Success", result.data));
+  } catch (error) {
+    console.error("Error getting orders", error);
+    return sendErrorResponse(res, ERROR_CODES.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export { createOrders, deleteOrders, getOrders };

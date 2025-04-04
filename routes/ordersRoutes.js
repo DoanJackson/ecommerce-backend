@@ -1,6 +1,10 @@
 import { Router } from "express";
 import ROLES from "../constants/role.js";
-import { createOrders, deleteOrders } from "../controllers/ordersController.js";
+import {
+  createOrders,
+  deleteOrders,
+  getOrders,
+} from "../controllers/ordersController.js";
 import { authenticateUser } from "../middleware/authMiddleware.js";
 import { hasRole } from "../middleware/roleMiddleware.js";
 import validate from "../middleware/validate.js";
@@ -16,6 +20,7 @@ router.post(
   validate(createOrdersSchema),
   createOrders
 );
+
 router.delete(
   "/:id",
   authenticateUser,
@@ -23,5 +28,7 @@ router.delete(
   validateUUID(["id"]),
   deleteOrders
 );
+
+router.get("/", authenticateUser, hasRole(ROLES.CLIENT), getOrders);
 
 export default router;

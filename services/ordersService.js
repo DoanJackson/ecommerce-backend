@@ -1,5 +1,7 @@
+import { Op } from "sequelize";
 import ERROR_CODES from "../constants/errorCodes.js";
-import { Orders, sequelize } from "../models/index.js";
+import { OrdersDTO } from "../dtos/ordersDTO.js";
+import { Goods, Orders, sequelize, Users } from "../models/index.js";
 import { checkGoodsExists } from "./goodsService.js";
 
 /**
@@ -106,9 +108,54 @@ async function deleteOrdersService(orders_id, user_id) {
   }
 }
 
+/**
+ * @param {Object} input
+ * @param {number} input.page
+ * @param {number} input.limit
+ * @param {string} input.search
+ * @param {string} input.sortType
+ * @param {string} input.user_id
+ * @returns {Promise<{success: boolean, data?: any, error_codes?: string}>}
+ */
+async function getOrdersService(input) {
+  try {
+    const { page, limit, search, sortType, user_id } = input;
+    const orders = await Orders.findAll({
+      where: { user_id: user_id },
+      include: [
+        {
+          model: Goods,
+          as: "goods",
+          attributes: ["id", "name"],
+          include: [
+            {
+              model: Users,
+              as: "merchant",
+              attributes: ["id", "name_shop"],
+            },
+          ],
+          where: {
+            name: { [Op.iLike]: `%${search}%` },
+          },
+        },
+      ],
+      attributes: ["id", "quantity", "total_price", "status", "created_at"],
+      order: sortType,
+      limit: limit,
+      offset: (page - 1) * limit,
+    });
+    const formattedOrders = OrdersDTO.fromArray(orders);
+    return { success: true, data: formattedOrders };
+  } catch (error) {
+    console.error("Error getting orders", error);
+    return { success: false, error_codes: ERROR_CODES.RETRIEVE_ORDER_FAILED };
+  }
+}
+
 export {
   checkOrdersExists,
   checkOrdersInputValid,
   createOrdersService,
   deleteOrdersService,
+  getOrdersService,
 };

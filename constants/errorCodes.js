@@ -52,6 +52,10 @@ const ERROR_CODES = {
     status: StatusCodes.NOT_FOUND,
     message: "ORDER_NOT_FOUND",
   },
+  RETRIEVE_ORDER_FAILED: {
+    status: StatusCodes.INTERNAL_SERVER_ERROR,
+    message: "RETRIEVE_ORDER_FAILED",
+  },
 };
 
 export default ERROR_CODES;
