@@ -75,4 +75,23 @@ async function getDetailGoodsService(id) {
   }
 }
 
-export { getDetailGoodsService, getGoodsService };
+/**
+ * @param {string} id
+ * @returns {Promise<{success: boolean, data: any, error_codes?: any}>}
+ */
+async function checkGoodsExists(id) {
+  try {
+    const goods = await Goods.findOne({
+      where: { id: id },
+    });
+    if (!goods) {
+      return { success: false, error_codes: ERROR_CODES.GOODS_NOT_FOUND };
+    }
+    return { success: true, data: goods };
+  } catch (error) {
+    console.error("Error checking goods exists", error);
+    return { success: false, error_codes: ERROR_CODES.INTERNAL_SERVER_ERROR };
+  }
+}
+
+export { checkGoodsExists, getDetailGoodsService, getGoodsService };

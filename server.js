@@ -7,6 +7,7 @@ import { getEnv } from "./config/env.js";
 import authRoutes from "./routes/authRoutes.js";
 import goodsRoutes from "./routes/goodsRoutes.js";
 import merchantGoodsRoutes from "./routes/merchantGoodsRoutes.js";
+import ordersRoutes from "./routes/ordersRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
@@ -34,6 +35,7 @@ app.use(cookieParser());
 app.use("/api/goods", goodsRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/orders", ordersRoutes);
 app.use("/api/merchant/goods", merchantGoodsRoutes);
 
 app.get("/", (req, res) => {

@@ -36,6 +36,18 @@ const ERROR_CODES = {
     status: StatusCodes.INTERNAL_SERVER_ERROR,
     message: "DELETE_IMAGE_ERROR",
   },
+  QUANTITY_NOT_ENOUGH: {
+    status: StatusCodes.CONFLICT,
+    message: "QUANTITY_NOT_ENOUGH",
+  },
+  ORDER_CREATE_FAILED: {
+    status: StatusCodes.INTERNAL_SERVER_ERROR,
+    message: "ORDER_CREATE_FAILED",
+  },
+  CANNOT_CREATE_ORDER: {
+    status: StatusCodes.INTERNAL_SERVER_ERROR,
+    message: "CANNOT_CREATE_ORDER",
+  },
 };
 
 export default ERROR_CODES;

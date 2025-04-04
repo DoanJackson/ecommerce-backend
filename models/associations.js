@@ -1,6 +1,7 @@
 import Goods from "./Goods.js";
 import Goods_Types from "./Goods_Types.js";
 import Images from "./Images.js";
+import Orders from "./Orders.js";
 import RefreshToken from "./RefreshToken.js";
 import Types from "./Types.js";
 import Users from "./Users.js";
@@ -28,6 +29,18 @@ function setupAssociations() {
     onDelete: "CASCADE",
   });
   Images.belongsTo(Users, { foreignKey: "user_id", as: "user" });
+  Users.hasMany(Orders, {
+    foreignKey: "user_id",
+    as: "orders",
+    onDelete: "CASCADE",
+  });
+  Orders.belongsTo(Users, { foreignKey: "user_id", as: "user" });
+  Goods.hasMany(Orders, {
+    foreignKey: "goods_id",
+    as: "orders",
+    onDelete: "CASCADE",
+  });
+  Orders.belongsTo(Goods, { foreignKey: "goods_id", as: "goods" });
 }
 
 export default setupAssociations;
