@@ -92,7 +92,7 @@ async function updateOrderStatusService(order_id, status) {
       { where: { id: order_id }, transaction: t, returning: true }
     );
 
-    if (!orders[0]) {
+    if (!orders) {
       await t.rollback();
       return { success: false, error_codes: ERROR_CODES.ORDER_NOT_FOUND };
     }
