@@ -21,4 +21,10 @@ const createOrdersSchema = Joi.object({
   address: Joi.string().min(1).max(100).required(),
 });
 
-export { createOrdersSchema };
+const updateOrdersSchema = Joi.object({
+  status: Joi.string()
+    .valid("pending", "accepted", "completed", "canceled")
+    .required(),
+});
+
+export { createOrdersSchema, updateOrdersSchema };

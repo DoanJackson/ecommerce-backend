@@ -1,6 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import ERROR_CODES from "../constants/errorCodes.js";
-import { getMerchantOrdersService } from "../services/merchantOrdersService.js";
+import { OrdersMerchantUpdateDTO } from "../dtos/ordersMerchantDTO.js";
+import {
+  checkMerchantOrderOwnership,
+  getMerchantOrdersService,
+  updateOrderStatusService,
+} from "../services/merchantOrdersService.js";
 import { sendErrorResponse } from "../utils/errorHandlers.js";
 import ResponseWrapper from "../utils/response.js";
 import { getSortType } from "../utils/sortUitls.js";
@@ -44,4 +49,44 @@ async function getMerchantOrders(req, res) {
   }
 }
 
-export { getMerchantOrders };
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
+async function updateOrderStatus(req, res) {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const user_id = req.user.id;
+
+    // check if order exists and is owned by the merchant
+    const order = await checkMerchantOrderOwnership(id, user_id);
+    if (!order.success) {
+      return sendErrorResponse(res, order.error_codes);
+    }
+
+    // update order status
+    const result = await updateOrderStatusService(id, status);
+    if (!result.success) {
+      return sendErrorResponse(res, result.error_codes);
+    }
+
+    // format the response data
+    const formattedMerchantOrders = new OrdersMerchantUpdateDTO(result.data);
+    return res
+      .status(StatusCodes.OK)
+      .json(
+        ResponseWrapper.success(
+          StatusCodes.OK,
+          "Order status updated",
+          formattedMerchantOrders
+        )
+      );
+  } catch (error) {
+    console.error("Error updating order status", error);
+    return sendErrorResponse(res, ERROR_CODES.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export { getMerchantOrders, updateOrderStatus };

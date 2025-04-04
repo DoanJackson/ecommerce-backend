@@ -10,7 +10,7 @@ import Users from "./Users.js";
 //     goods_id UUID REFERENCES goods(id) ON DELETE CASCADE,
 //     quantity INTEGER NOT NULL CHECK (quantity > 0),
 //     total_price numeric(15,2) NOT NULL CHECK (total_price >= 0),
-//     status varchar(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'canceled')),
+//     status varchar(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'completed', 'canceled')),
 //     created_at TIMESTAMPTZ DEFAULT NOW(),
 //     city varchar(100) NOT NULL,
 //     district varchar(100) NOT NULL,
@@ -54,7 +54,7 @@ const Orders = sequelize.define(
       validate: { min: 0 },
     },
     status: {
-      type: DataTypes.ENUM("pending", "completed", "canceled"),
+      type: DataTypes.ENUM("pending", "accepted", "completed", "canceled"),
       allowNull: false,
       defaultValue: "pending",
     },

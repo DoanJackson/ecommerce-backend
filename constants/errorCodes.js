@@ -64,6 +64,10 @@ const ERROR_CODES = {
     status: StatusCodes.INTERNAL_SERVER_ERROR,
     message: "RETRIEVE_MERCHANT_ORDERS_FAILED",
   },
+  UPDATE_ORDER_STATUS_FAILED: {
+    status: StatusCodes.INTERNAL_SERVER_ERROR,
+    message: "UPDATE_ORDER_STATUS_FAILED",
+  },
 };
 
 export default ERROR_CODES;
